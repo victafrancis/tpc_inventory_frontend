@@ -7,6 +7,7 @@ import {
   InputLabel,
   MenuItem,
   Chip,
+  CircularProgress,
 } from "@material-ui/core";
 import LeftChevron from "components/LeftChevron/LeftChevron";
 
@@ -14,6 +15,8 @@ import target from "api/api.target";
 
 //context
 import { useNavigation } from "contexts/NavigationContext";
+import { useProducts } from "contexts/ProductsContext";
+import { useSnackbar } from "contexts/SnackbarContext";
 
 //component
 import InputField from "components/InputField/InputField";
@@ -26,6 +29,8 @@ import styles from "./AddProduct.module.css";
 
 const AddProduct = () => {
   const { goBack } = useNavigation();
+  const { addProduct } = useProducts();
+  const { openSnackbar } = useSnackbar();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [unitSellingPrice, setUnitSellingPrice] = useState("");
   const [originalCost, setOriginalCost] = useState("");
@@ -107,7 +112,7 @@ const AddProduct = () => {
     setImageFile(event.target.files[0]);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
     const formData = new FormData();
@@ -130,15 +135,15 @@ const AddProduct = () => {
       "unit_sell_price",
       unitSellingPrice === "" ? 0 : unitSellingPrice
     );
-
     formData.append("image", imageFile);
+    
+    await addProduct(formData, callBack);
+    setIsSubmitting(false);
+  };
 
-    axios
-      .post(`${target}/products`, formData, {
-        "content-type": "multipart/form-data",
-      })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+  const callBack = () => {
+    openSnackbar("Successfully added a new product!");
+    goBack();
   };
 
   useEffect(() => {
@@ -353,11 +358,19 @@ const AddProduct = () => {
             </Grid>
           </div>
           <div className={styles["buttons"]}>
-            <button className={styles["button"]} disabled={isSubmitting}>
-              Submit
+            <button
+              type="submit"
+              className={styles["button"]}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? <CircularProgress size={12} /> : "ADD"}
             </button>
-            <button className={styles["button"]} onClick={() => goBack()}>
-              Cancel
+            <button
+              type="button"
+              className={styles["button"]}
+              onClick={() => goBack()}
+            >
+              CANCEL
             </button>
           </div>
         </div>

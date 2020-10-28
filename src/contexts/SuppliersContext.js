@@ -22,6 +22,34 @@ export const SuppliersProvider = (props) => {
     return data;
   };
 
+  const addSupplier = async (supplierdata, cb) => {
+    try {
+      await axios.post(`${target}/suppliers/`, supplierdata).then((res) => {
+        console.log(res);
+      });
+      await getSuppliers();
+      return cb();
+    } catch (err) {
+      console.log(err);
+      return;
+    }
+  };
+
+  const editSupplier = async (supplier_id, supplierdata, cb) => {
+    try {
+      await axios
+        .put(`${target}/suppliers/${supplier_id}`, supplierdata)
+        .then((res) => {
+          console.log(res);
+        });
+      await getSuppliers();
+      return cb();
+    } catch (err) {
+      console.log(err);
+      return;
+    }
+  };
+
   async function getSuppliers() {
     try {
       await axios
@@ -37,7 +65,15 @@ export const SuppliersProvider = (props) => {
   }, []);
 
   return (
-    <SuppliersContext.Provider value={{ suppliers, getSupplierDetails }}>
+    <SuppliersContext.Provider
+      value={{
+        suppliers,
+        getSupplierDetails,
+        addSupplier,
+        getSuppliers,
+        editSupplier,
+      }}
+    >
       {props.children}
     </SuppliersContext.Provider>
   );

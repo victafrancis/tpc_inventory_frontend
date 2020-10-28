@@ -49,7 +49,7 @@
   box-shadow: 3px 3px 10px rgba(128, 128, 128, 0.5);
 }
 
-.image-input{
+.image-input {
   margin-top: 20px;
 }
 
@@ -62,13 +62,10 @@
 .button {
   padding: 10px 0;
   width: 40%;
-  font-size: 20px;
-  font-weight: bold;
-  background: none;
+  font-size: 15px;
   border-radius: 5px;
   border: 1px solid #8c8c8c;
   box-sizing: border-box;
-  box-shadow: 0 0 3px darkgrey;
   transition: 0.3s ease-in;
 }
 
@@ -80,11 +77,11 @@
   background: white;
 }
 
-.grid{
+.grid {
   padding-top: 10px;
 }
 
-.chip{
+.chip {
   margin-left: 5px;
 }
 
@@ -110,5 +107,8 @@
   .right-inner-container {
     width: 100%;
     padding: 0;
+  }
+  .image {
+    width: 70%;
   }
 }
