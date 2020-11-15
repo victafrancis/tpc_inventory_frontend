@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import target from "api/api.target";
+import { useSpinner } from "./SpinnerContext"
 
 const ProductsContext = React.createContext();
 
@@ -10,11 +11,25 @@ export const useProducts = () => {
 
 export const ProductsProvider = (props) => {
   const [products, setProducts] = useState([]);
+  const { setIsLoading } = useSpinner();
 
   const getProductDetails = async (id) => {
     let data = null;
     try {
       let response = await axios.get(`${target}/products/${id}`);
+      data = response.data;
+    } catch (err) {
+      console.log(err);
+    }
+    return data;
+  };
+
+  const getProductStorageDetails = async (id) => {
+    let data = null;
+    try {
+      let response = await axios.get(
+        `${target}/storages/getThisProductInAllStorages/${id}`
+      );
       data = response.data;
     } catch (err) {
       console.log(err);
@@ -28,12 +43,12 @@ export const ProductsProvider = (props) => {
         .post(`${target}/products`, formdata, {
           "content-type": "multipart/form-data",
         })
-        .then((res) => console.log(res));
+        .then((res) => console.log(res.data));
     } catch (err) {
       console.log(err);
       return;
     }
-    await getProducts();
+    getProducts();
     return cb();
   };
 
@@ -44,18 +59,58 @@ export const ProductsProvider = (props) => {
       console.log(err);
       return;
     }
-    await getProducts();
+    getProducts();
     return cb();
   };
 
-  const getProducts = async () => {
+
+  const getProducts = () => {
+    setIsLoading(true)
     try {
-      await axios
-        .get(`${target}/products`)
-        .then((response) => setProducts(response.data));
+      axios
+        .get(`${target}/products`, {
+          headers: {
+            authorization: "Bearer " + localStorage.getItem("@token"),
+          },
+        })
+        .then((response) => {setProducts(response.data)});
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setTimeout(()=>{
+        setIsLoading(false)
+      }, 1000)
+    }
+  };
+
+  const getCollections = async () => {
+    let data = null;
+    try {
+      let res = await axios.get(`${target}/collections`, {
+        headers: {
+          authorization: "Bearer " + localStorage.getItem("@token"),
+        },
+      });
+      data = res.data;
     } catch (err) {
       console.log(err);
     }
+    return data;
+  };
+
+  const getTags = async () => {
+    let data = null;
+    try {
+      let res = await axios.get(`${target}/tags`, {
+        headers: {
+          authorization: "Bearer " + localStorage.getItem("@token"),
+        },
+      });
+      data = res.data;
+    } catch (err) {
+      console.log(err);
+    }
+    return data;
   };
 
   useEffect(() => {
@@ -64,7 +119,16 @@ export const ProductsProvider = (props) => {
 
   return (
     <ProductsContext.Provider
-      value={{ products, getProductDetails, addProduct, editProduct, getProducts }}
+      value={{
+        products,
+        getProductDetails,
+        getProductStorageDetails,
+        addProduct,
+        editProduct,
+        getProducts,
+        getCollections,
+        getTags
+      }}
     >
       {props.children}
     </ProductsContext.Provider>

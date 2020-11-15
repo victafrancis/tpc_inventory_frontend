@@ -1,8 +1,8 @@
-import { ButtonBase, Grid, InputAdornment, makeStyles, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography } from '@material-ui/core';
+import { ButtonBase, Grid,makeStyles, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography } from '@material-ui/core';
 import { useStorage } from 'contexts/StorageContext';
-import { Search, MoreVert, ChevronLeft } from '@material-ui/icons';
+import { ChevronLeft } from '@material-ui/icons';
 import { useNavigation } from "contexts/NavigationContext";
-import React, { useEffect } from 'react';
+import React from 'react';
 
 const useStyles = makeStyles(theme => ({
     title: {
@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
         width: "120px"
     },
     titleContainer: {
-        marginTop: "10px"
+        marginTop: "57px"
     },
     paginationContainer: {
         overflow: "hidden"
@@ -25,12 +25,14 @@ const useStyles = makeStyles(theme => ({
     header: {
         fontWeight: "bold",
     },
-    // tableSize: {
-    //     maxWidth: "1000px",
-    //     alignItems: "center",
-    //     justify: "center",
-    //     direction: "column"
-    // }
+    tableSize: {
+        maxWidth: "600px",
+        alignItems: "center",
+        marginLeft: "auto",
+        marginRight: "auto"
+        // justify: "center",
+        // direction: "column"
+    }
 }))
 
 

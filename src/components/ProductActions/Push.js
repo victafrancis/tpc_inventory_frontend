@@ -48,7 +48,7 @@ function Push() {
     const { openSnackbar } = useSnackbar();
     const [ storageLocations, setStorageLocations ] = useState([]);
     const { getProductDetails, getProducts } = useProducts();
-    const { getStorage } = useStorage();
+    const { getStorages } = useStorage();
     const [ product, setProduct ] = useState({});
 
     const [submitting, setSubmitting] = React.useState(false)
@@ -90,7 +90,7 @@ function Push() {
                         // setOpen(true)
                         openSnackbar(res.data)
                         setSubmitting(false)
-                        getStorage();
+                        getStorages();
                         getProducts();
                         goBack();
                         //Expensive design choice right here
@@ -136,7 +136,7 @@ function Push() {
                                 PUSH
                             </Typography>
                         </Grid>
-                        <img src={product.image ? `${target}/images/${product.image}` : img} className={classes.img} alt="product image"/>
+                        <img src={product.image ? `${target}/images/${product.image}` : img} className={classes.img} alt="product"/>
                         <Autocomplete
                             freeSolo
                             id="location"
