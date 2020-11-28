@@ -30,10 +30,10 @@ import img from "assets/tpc_logo.jpg";
 
 const ProductsTable = () => {
   const classes = useStyles();
-  const { products } = useProducts();
+  const { products, page, setPage, rowsPerPage, setRowsPerPage } = useProducts();
   const { viewDetails } = useNavigation();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  // const [page, setPage] = useState(0);
+  // const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -194,7 +194,7 @@ const ProductsTable = () => {
       </TableContainer>
       <TablePagination
         component="div"
-        rowsPerPageOptions={[5, 10, 15]}
+        rowsPerPageOptions={[5, 10, 15, 100]}
         rowsPerPage={rowsPerPage}
         count={result.length}
         page={page}

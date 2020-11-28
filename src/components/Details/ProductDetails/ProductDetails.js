@@ -17,6 +17,12 @@ const useStyles = makeStyles(theme => ({
       padding: "0 1vw"
     },
   },
+  buttonPushPull: {
+    [theme.breakpoints.down("xs")]: {
+      padding: "6px",
+      minWidth: "48px"
+    },
+  },
   chevron: {
     fontSize: "10vh",
   },
@@ -317,13 +323,26 @@ const ProductDetails = () => {
                       <TableCell align="center">{row.bin}</TableCell>
                       <TableCell align="center">{row.quantity}</TableCell>
                       <TableCell align="right">
-                        <Button 
-                          variant="contained" 
-                          size="small"
-                          onClick={()=>viewDetails(`/storages/storage/${row.id}/pull/${product._id}`)}>
-                          Pull
-                          </Button>
-                        </TableCell>
+                        <Grid container direction="row" alignItems="center" spacing={1}>
+                          <Grid item>
+                            <Button className={classes.buttonPushPull}
+                              variant="contained" 
+                              size="small"
+                              // navigateTo(`/products/push/${selected._id}/${storage.id}`)
+                              onClick={()=>viewDetails(`/products/push/${product._id}/${row.id}`)}>
+                              Push
+                            </Button>
+                          </Grid>
+                          <Grid item>
+                            <Button className={classes.buttonPushPull}
+                              variant="contained" 
+                              size="small"
+                              onClick={()=>viewDetails(`/storages/storage/${row.id}/pull/${product._id}`)}>
+                              Pull
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </TableCell>
                     </TableRow>
                     else return null
                   })}
@@ -331,12 +350,12 @@ const ProductDetails = () => {
               </Table>
             </TableContainer>
             <Grid item xs={12} container justify="flex-start">
-              <Grid item xs={7} md={11} md={12}>
+              <Grid item xs={7} md={11}>
                 <Button 
                   fullWidth 
                   variant="contained" 
                   className={classes.mt1rem}
-                  onClick={()=>viewDetails(`/products/push/${product._id}`)}>Push</Button>
+                  onClick={()=>viewDetails(`/products/push/${product._id}`)}>Push to new</Button>
               </Grid>
             </Grid>
           </Grid>

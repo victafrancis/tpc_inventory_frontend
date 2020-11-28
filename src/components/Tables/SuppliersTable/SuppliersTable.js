@@ -28,10 +28,10 @@ import styles from "./SuppliersTable.module.css";
 
 const SuppliersTable = (props) => {
   const classes = useStyles();
-  const { suppliers } = useSuppliers();
+  const { suppliers, page, setPage, rowsPerPage, setRowsPerPage } = useSuppliers();
   const { viewDetails } = useNavigation();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  // const [page, setPage] = useState(0);
+  // const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -137,19 +137,17 @@ const SuppliersTable = (props) => {
                 >
                   <TableCell align="left">{row["supplier_name"]}</TableCell>
                   <TableCell align="left">
-                    {row["supplier_website"] === null
-                      ? "N/A"
-                      : row["supplier_website"]}
+                    {row["supplier_website"]? <a href={row["supplier_website"]} target="_blank" rel="noopener noreferrer">Go to website</a> : ""}
                   </TableCell>
                   <TableCell align="left">
                     {row["supplier_email"] === null
-                      ? "N/A"
+                      ? ""
                       : row["supplier_email"]}
                   </TableCell>
 
                   <TableCell align="left">
                     {row["supplier_notes"] === null
-                      ? "N/A"
+                      ? ""
                       : row["supplier_notes"]}
                   </TableCell>
                 </TableRow>

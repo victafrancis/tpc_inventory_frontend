@@ -11,6 +11,8 @@ export const useProducts = () => {
 
 export const ProductsProvider = (props) => {
   const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
   const { setIsLoading } = useSpinner();
 
   const getProductDetails = async (id) => {
@@ -79,7 +81,7 @@ export const ProductsProvider = (props) => {
     } finally {
       setTimeout(()=>{
         setIsLoading(false)
-      }, 1000)
+      }, 100)
     }
   };
 
@@ -115,6 +117,7 @@ export const ProductsProvider = (props) => {
 
   useEffect(() => {
     getProducts();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -127,7 +130,11 @@ export const ProductsProvider = (props) => {
         editProduct,
         getProducts,
         getCollections,
-        getTags
+        getTags,
+        page,
+        setPage,
+        rowsPerPage,
+        setRowsPerPage
       }}
     >
       {props.children}

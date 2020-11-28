@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import target from "api/api.target";
+import { useSpinner } from "./SpinnerContext"
 
 const RestocksContext = React.createContext();
 
@@ -10,12 +11,19 @@ export const useRestocks = () => {
 
 export const RestocksProvider = (props) => {
   const [restocks, setRestocks] = useState([]);
+  const [page, setPage] = React.useState(0)
+  const [rowsPerPage, setRowsPerPage] = React.useState(10)
+  const { setIsLoading } = useSpinner()
 
   async function getRestocks() {
+    setIsLoading(true)
     try {
       await axios
         .get(`${target}/restocks`)
-        .then((response) => setRestocks(response.data));
+        .then((response) => {
+          setIsLoading(false)
+          setRestocks(response.data)
+        });
     } catch (err) {
       console.log(err);
     }
@@ -36,6 +44,7 @@ export const RestocksProvider = (props) => {
 
   useEffect(() => {
     getRestocks();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -43,6 +52,10 @@ export const RestocksProvider = (props) => {
       value={{
         restocks,
         addRestock,
+        rowsPerPage,
+        setRowsPerPage,
+        page,
+        setPage,
       }}
     >
       {props.children}

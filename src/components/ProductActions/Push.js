@@ -43,13 +43,15 @@ const useStyles = makeStyles(theme=>({
 function Push() {
 
     const classes = useStyles();
-    const { product_id } = useParams();
+    const { product_id, storage_id } = useParams();
     const { goBack } = useNavigation();
     const { openSnackbar } = useSnackbar();
     const [ storageLocations, setStorageLocations ] = useState([]);
     const { getProductDetails, getProducts } = useProducts();
     const { getStorages } = useStorage();
     const [ product, setProduct ] = useState({});
+    const [ thisStorage, setThisStorage ] = useState(null);
+    const [bin, setBin] = useState("")
 
     const [submitting, setSubmitting] = React.useState(false)
     // const [open, setOpen] = React.useState(false)
@@ -69,19 +71,29 @@ function Push() {
             setProduct(product);
         }
         getProduct();
+
+        if(storage_id){
+            Axios.get(`${target}/storages/${storage_id}`)
+            .then(res => {
+                console.log(res.data)
+                setThisStorage(res.data)
+                setBin(res.data?.bin)
+            })
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [product_id])
+    }, [product_id, storage_id])
 
     const submit = (e) => {
         e.preventDefault()
         setSubmitting(true)
         const location = document.getElementById('location').value
-        const bin = document.getElementById('bin').value
+        // const bin = document.getElementById('bin').value
         const quantity = document.getElementById('quantity').value
+
         // console.log("loc:", loc)
         // console.log("bin:", bin)
-        console.log("qty:")
-        console.log(quantity)
+        console.log("qty:", quantity)
+
         if (location.length !== 0 && bin.length !== 0 && quantity > -1 && quantity !== ""){
             setTimeout(()=> {
                 Axios.post(`${target}/storages/push`, { location, bin, product_id, quantity })
@@ -141,6 +153,7 @@ function Push() {
                             freeSolo
                             id="location"
                             options={storageLocations}
+                            value={thisStorage}
                             getOptionLabel={(option) => option.location}
                             renderInput={(params) => <TextField {...params}
                                 label="Location" 
@@ -162,6 +175,9 @@ function Push() {
                             margin="dense" 
                             label="Bin"
                             id="bin"
+                            // defaultValue={thisStorage ? thisStorage.bin : "" }
+                            value={bin}
+                            onChange={(e)=>setBin(e.target.value)}
                             onFocus={onFocus}
                             autoComplete='off'
                             />

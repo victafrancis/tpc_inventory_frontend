@@ -1,6 +1,7 @@
 import target from 'api/api.target';
 import Axios from 'axios';
 import React from 'react'
+import { useSpinner } from "./SpinnerContext"
 
 const StorageContext = React.createContext();
 
@@ -10,11 +11,14 @@ export const useStorage = () => {
 
 export const StorageProvider = (props) => {
     const [storage, setStorage] = React.useState([])
-
+    const [page, setPage] = React.useState(0)
+    const [rowsPerPage, setRowsPerPage] = React.useState(10)
+    const [select, setSelect] = React.useState('----');
+    const { setIsLoading } = useSpinner()
     const getStorage = async(id) => {
         let data = null;
         try{
-            let res = Axios.get(`${target}/storages/${id}`);
+            let res = await Axios.get(`${target}/storages/${id}`);
             data = res.data;
         }catch(err){
             console.log(err)
@@ -23,9 +27,20 @@ export const StorageProvider = (props) => {
     }
 
     const getStorages = () => {
+        setIsLoading(true)
         Axios.get(`${target}/storages`)
-            .then(res=>setStorage(res.data))
-            .catch(err=>console.log(err))
+            .then(res=>{
+                setTimeout(()=>{
+                    setStorage(res.data)
+                    setIsLoading(false)
+                }, 100)
+            })
+            .catch(err=>{
+                setTimeout(()=>{
+                    console.log(err)
+                    setIsLoading(false)
+                }, 100)
+            })
     }
 
     const getProductsInStorage = async(id) => {
@@ -41,10 +56,23 @@ export const StorageProvider = (props) => {
     
     React.useEffect(() => {
         getStorages()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
-        <StorageContext.Provider value={{ storage, getStorage, getStorages, getProductsInStorage }}>
+        <StorageContext.Provider 
+            value={{ 
+                storage, 
+                getStorage, 
+                getStorages, 
+                getProductsInStorage,
+                rowsPerPage,
+                setRowsPerPage,
+                page,
+                setPage,
+                select,
+                setSelect
+                }}>
             {props.children}
         </StorageContext.Provider>
     )
